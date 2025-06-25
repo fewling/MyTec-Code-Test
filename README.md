@@ -30,7 +30,7 @@ MyTEC Code Test - Meeting Room Listing Module
   - [3. Project Architecture Overview 🏗️](#3-project-architecture-overview-️)
     - [3.1 High Level Overview](#31-high-level-overview)
     - [3.2 A Slightly More Detailed Overview](#32-a-slightly-more-detailed-overview)
-    - [3.3 File/Folders Breakdown](#33-filefolders-breakdown)
+    - [3.3 Folder Structure Breakdown](#33-folder-structure-breakdown)
     - [3.4 Centralized API Client Logics](#34-centralized-api-client-logics)
     - [3.5 Error Handling](#35-error-handling)
   - [4. General Dependency Tree 🔃](#4-general-dependency-tree-)
@@ -66,6 +66,9 @@ This project uses the latest Flutter (`3.32.4`) and Dart (`3.8.1`).
   ```sh
   fvm use 3.32.4
   ```
+
+> Note⚠️:
+> If you are using FVM, make sure to run all commands below prefixed with `fvm flutter` to ensure you are using the correct version. For example: `fvm flutter pub get`
 
 ### 1.2 Install Dependencies
 
@@ -129,7 +132,7 @@ $ flutter run --flavor production --target lib/main_production.dart
 
 ### 1.6 Building the App
 
-To build the app for different flavors, use the following commands:
+To build the Android app for different flavors, use the following commands:
 
 ```sh
 # Development
@@ -142,6 +145,7 @@ $ flutter build apk --flavor staging --target lib/main_staging.dart
 $ flutter build apk --flavor production --target lib/main_production.dart
 ```
 
+> Note⚠️:
 > For now, I don't have access to a Mac, so I cannot provide accurate instructions for building the iOS app.
 
 ---
@@ -197,15 +201,15 @@ This project relies on [flutter_localizations][flutter_localizations_link] and f
 Update the `CFBundleLocalizations` array in the `Info.plist` at `ios/Runner/Info.plist` to include the new locale.
 
 ```xml
-    ...
+...
 
-    <key>CFBundleLocalizations</key>
- <array>
-  <string>en</string>
-  <string>es</string>
- </array>
+<key>CFBundleLocalizations</key>
+<array>
+<string>en</string>
+<string>es</string>
+</array>
 
-    ...
+...
 ```
 
 ### 2.3 Adding Translations
@@ -283,16 +287,18 @@ flowchart RL
 ```
 
 1. **Data Sources**: The raw data sources, typically remote APIs or on-device database.
-2. **Repository**: This layer abstracts the data sources, handles the data serialization and provides a clean API for the service layer.
-3. **Service**: This layer contains the business logic and decides how to fetch and manipulate data. It interacts with the repository to get the data it needs.
+2. **Repository**: This layer abstracts the data sources, handles the data de/serialization and provides a clean API for the service layer.
+3. **Service**: This layer contains the business logic and decides what/where/how to fetch and manipulate data. It interacts with the repository to get the data it needs.
 4. **Bloc**: This layer manages the state of the application and interacts with the service layer.
 5. **View**: This is the presentation layer that displays the data and interacts with the user.
 6. **Data**: This represent the data classes fetched from the data sources.
 7. **Model**: This represent a cleansed version of the data classes.
 
-> To better understand the difference between **Data** and **Model**, may take [room.dart](lib/modules/meeting_rooms/models/room.dart) as an example, where `Room` is the model which is composed of multiple data classes such as `RoomInfo`, `RoomAvailability`, `RoomPrice` etc.\
+> To better understand the differences between **Data** and **Model**, may take [room.dart](lib/modules/meeting_rooms/models/room.dart) as an example, where `Room` is the model which is composed of multiple data classes such as `RoomInfo`, `RoomAvailability`, `RoomPrice` etc.\
 > These three  data classes represent the raw data fetched from the API, while `Room` is a higher-level abstraction that combines these data classes into a single entity that can be easily used by the widget.\
 > The `Room` model groups these data classes into a single entity that can be easily used in the application.
+>
+> Yet, it is **NOT A MUST** to have a model for every data class, it depends on the complexity of the data and how it is used in the application.
 
 ### 3.2 A Slightly More Detailed Overview
 
@@ -334,6 +340,7 @@ flowchart TD
 
     service1 --> bloc1
     service2 --> bloc2
+    service2 --> bloc3
     service3 --> bloc3
     
     bloc1 --> ui1
@@ -353,7 +360,7 @@ Finally, the **UI** components subscribe to the relevant Blocs to display up-to-
 
 This structure promotes separation of concerns, scalability, and maintainability across the application.
 
-### 3.3 File/Folders Breakdown
+### 3.3 Folder Structure Breakdown
 
 1. `configs/routes` folder:
    - Defines the route tree and required parameters for each route.
@@ -364,10 +371,11 @@ This structure promotes separation of concerns, scalability, and maintainability
    - Contains the features of the application, each represented by a sub-folder.
    - Each module contains its own data sources, repositories, services, blocs, models, and views.
    - Modules are self-contained and can be developed independently.
+   - Yet, some modules are designed to be global and are accessible in other modules, such as authentication.
 
 3. `pages` folder:
    - The actual UI pages of the application.
-   - Defines the UI components and corresponding dependencies for each page.
+   - Defines the arrangement of UI components and corresponding dependencies for each page.
 
 4. `widgets` folder:
    - Contains reusable & generic widgets that can be used across different modules and pages.
@@ -378,7 +386,7 @@ This structure promotes separation of concerns, scalability, and maintainability
 
 ### 3.4 Centralized API Client Logics
 
-The project uses a centralized API client, implemented as the [TecApiClient](lib/utils/mixins/api_clients/tec/tec_api_client.dart) mixin, to standardize and simplify all HTTP interactions with the TEC backend. This client is designed for extensibility, maintainability, and type safety.
+The project groups all API client logic into a single, reusable mixin that can be easily integrated into any classes that require API interactions (see [TecApiClient](lib/utils/mixins/api_clients/tec/tec_api_client.dart)). This approach promotes code reuse, reduces boilerplate, and centralizes API request handling.
 
 - **Environment-based Configuration:**  
   The base URL and access key are loaded from environment variables (`.env`), ensuring secure and flexible configuration for different environments (development, staging, production).
@@ -442,13 +450,6 @@ switch (result) {
 }
 ```
 
-**Benefits:**
-
-- Promotes consistent error handling patterns across the app.
-- Makes it easy to propagate, log, and display meaningful error messages.
-- Reduces boilerplate and risk of unhandled exceptions.
-- Facilitates robust error reporting and debugging.
-
 ## 4. General Dependency Tree 🔃
 
 ```mermaid
@@ -491,8 +492,8 @@ flowchart
         centrePoolBloc --> filterResultListView
     end
 
-    appRouter --> | not authenticated/initialized | Splash
-    appRouter -->  | authenticated/initialized | Booking
+    appRouter --> | is not authenticated/initialized | Splash
+    appRouter -->  | is authenticated/initialized | Booking
 ```
 
 ---
