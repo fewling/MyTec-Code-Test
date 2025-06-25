@@ -28,9 +28,22 @@ class SplashPage extends StatelessWidget {
               ('Centres', centresStatus),
               ('Rooms', roomsStatus),
             ].map((e) => Text('${e.$1} Status: ${e.$2.name}')),
+
+            if ([cityStatus, centresStatus, roomsStatus].any((e) => e.isError))
+              TextButton.icon(
+                onPressed: () => _retryAll(context),
+                label: const Text('Retry'),
+                icon: const Icon(Icons.refresh),
+              ),
           ],
         ),
       ),
     );
+  }
+
+  void _retryAll(BuildContext context) {
+    context.read<CityPoolBloc>().add(const CityPoolEvent.retryRequested());
+    context.read<CentrePoolBloc>().add(const CentrePoolEvent.retryRequested());
+    context.read<RoomPoolBloc>().add(const RoomPoolEvent.retryRequested());
   }
 }

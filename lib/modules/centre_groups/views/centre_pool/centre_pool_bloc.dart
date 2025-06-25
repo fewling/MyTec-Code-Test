@@ -17,6 +17,7 @@ class CentrePoolBloc extends Bloc<CentrePoolEvent, CentrePoolState> {
     on<CentrePoolEvent>(
       (event, emit) => switch (event) {
         _Started() => _onStarted(event, emit),
+        _RetryRequested() => _onRetryRequested(event, emit),
       },
     );
   }
@@ -62,4 +63,9 @@ class CentrePoolBloc extends Bloc<CentrePoolEvent, CentrePoolState> {
         );
     }
   }
+
+  void _onRetryRequested(
+    _RetryRequested event,
+    Emitter<CentrePoolState> emit,
+  ) => add(const CentrePoolEvent.started());
 }

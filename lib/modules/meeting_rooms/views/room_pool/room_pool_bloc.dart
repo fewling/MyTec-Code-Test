@@ -17,6 +17,7 @@ class RoomPoolBloc extends Bloc<RoomPoolEvent, RoomPoolState> {
     on<RoomPoolEvent>(
       (event, emit) => switch (event) {
         _Started() => _onStarted(event, emit),
+        _RetryRequested() => _onRetryRequested(event, emit),
       },
     );
   }
@@ -60,4 +61,7 @@ class RoomPoolBloc extends Bloc<RoomPoolEvent, RoomPoolState> {
         );
     }
   }
+
+  void _onRetryRequested(_RetryRequested event, Emitter<RoomPoolState> emit) =>
+      add(const RoomPoolEvent.started());
 }
