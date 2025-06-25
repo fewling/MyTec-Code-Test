@@ -1,0 +1,27 @@
+{
+	"id": "a17fb56a-398b-4c50-8566-5665fc46eeb3",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "https://octo.pr-product-core.executivecentre.net",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "access_key",
+			"value": "qui_aute_fugiat_irure",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "ProfileId",
+			"value": "{{ProfileId}}",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2025-06-19T20:36:39.043Z",
+	"_postman_exported_using": "Postman/11.39.2"
+}

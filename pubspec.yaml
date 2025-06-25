@@ -1,0 +1,53 @@
+name: my_tec
+description: MyTEC Code Test - Meeting Room Listing Module
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: ^3.8.0
+
+dependencies:
+  bloc: ^9.0.0
+  collection: ^1.19.1
+  flutter:
+    sdk: flutter
+  flutter_animate: ^4.5.2
+  flutter_bloc: ^9.1.1
+  flutter_dotenv: ^5.2.1
+  flutter_localizations:
+    sdk: flutter
+  flutter_portal: ^1.1.4
+  freezed_annotation: ^3.0.0
+  go_router: ^15.2.3
+  http: ^1.4.0
+  intl: ^0.20.2
+  json_annotation: ^4.9.0
+  logger: ^2.5.0
+  responsive_builder: ^0.7.1
+  universal_html: ^2.2.4
+  universal_platform: ^1.1.0
+
+dev_dependencies:
+  bloc_test: ^10.0.0
+  build_runner: ^2.5.2
+  flutter_gen_runner: ^5.10.0
+  flutter_test:
+    sdk: flutter
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
+  mocktail: ^1.0.4
+  very_good_analysis: ^9.0.0
+
+flutter_gen:
+  output: lib/gen/ # Optional (default: lib/gen/)
+  line_length: 80 # Optional (default: 80)
+
+flutter:
+  generate: true
+  uses-material-design: true
+
+  assets:
+    - .env
+    - assets/
+    - assets/icons/
+    - assets/images/
