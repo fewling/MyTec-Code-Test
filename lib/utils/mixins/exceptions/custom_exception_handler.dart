@@ -8,8 +8,6 @@ mixin CustomExceptionHandler {
   /// Run the operation and catch any exceptions.
   ///
   /// If an exception is caught, it will be handled and rethrown as a [CustomException].
-  ///
-  /// ! If renaming this method, make sure to update the name in [local_pkgs/app_lint/lib/app_lint.dart]
   Result<T, CustomException> tryRun<T>(T Function() operation) {
     try {
       final result = operation();
@@ -26,8 +24,6 @@ mixin CustomExceptionHandler {
   /// Run the operation and catch any exceptions.
   ///
   /// If an exception is caught, it will be handled and rethrown as a [CustomException].
-  ///
-  /// ! If renaming this method, make sure to update the name in [local_pkgs/app_lint/lib/app_lint.dart]
   Future<Result<T, CustomException>> tryRunAsync<T>(
     Future<T> Function() operation,
   ) async {
@@ -57,16 +53,13 @@ mixin CustomExceptionHandler {
   /// );
   /// ```
   CustomException exceptionFromObject(dynamic object) {
-    logger.d('exceptionFromObject: object: $object (${object.runtimeType})');
+    logger.i('exceptionFromObject: object: $object (${object.runtimeType})');
 
-    if (object is CustomException) {
-      return object;
-    }
+    if (object is CustomException) return object;
 
-    return UnknownException(message: object.toString());
+    return UnknownException(message: '$object');
   }
 
-  CustomException _handleUnknownException(dynamic e) {
-    return UnknownException(message: e.toString());
-  }
+  CustomException _handleUnknownException(dynamic e) =>
+      UnknownException(message: '$e');
 }
