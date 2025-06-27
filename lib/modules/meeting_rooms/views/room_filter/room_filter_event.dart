@@ -25,7 +25,9 @@ sealed class RoomFilterEvent with _$RoomFilterEvent {
     bool needVideoConference,
   ) = _VideoConferenceToggled;
 
-  const factory RoomFilterEvent.reset() = _Reset;
+  const factory RoomFilterEvent.reset({
+    required Iterable<CentreGroup> selectedCentres,
+  }) = _Reset;
 
   const factory RoomFilterEvent.newCitySelected(List<CentreGroup> centres) =
       _NewCitySelected;

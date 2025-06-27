@@ -136,7 +136,9 @@ mixin RoomFilterMixin<E extends RoomFilterEvent, S extends RoomFilterState>
   ) => emit(state.copyWith(needVideoConference: event.needVideoConference));
 
   void _onReset(_Reset event, Emitter<RoomFilterState> emit) =>
-      emit(_initialState);
+      emit(_initialState.copyWith(
+        selectedCentres: Set.from(event.selectedCentres),
+      ));
 
   void _onNewCitySelected(
     _NewCitySelected event,

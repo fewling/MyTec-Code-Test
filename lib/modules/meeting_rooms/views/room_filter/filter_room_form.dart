@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
 import '../../../../utils/constants/constants.dart';
-import '../../../../utils/extensions/extensions.dart';
 import '../../../../widgets/cupertino_modal_container.dart';
 import '../../../centre_groups/views/centre_pool/centre_pool_bloc.dart';
 import '../../../cities/views/city_pool/city_pool_bloc.dart';
@@ -41,14 +40,10 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextButton(
-                    onPressed: () => context.read<TempRoomFilterBloc>().add(
-                      const RoomFilterEvent.reset(),
-                    ),
+                    onPressed: () => _onReset(context),
                     child: const Text('Reset'),
                   ),
-
                   const Divider(height: 1, thickness: 1),
-
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
@@ -60,7 +55,6 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                           trailing: const Icon(Icons.calendar_today_rounded),
                           onTap: () => _pickDate(context: context),
                         ),
-
                         _OptionTile(
                           title: HardcodedLabels.filterStartTimeTitle.label,
                           value: state.startTime.as12Hr,
@@ -73,7 +67,6 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                                 .add(RoomFilterEvent.startTimePicked(value)),
                           ),
                         ),
-
                         _OptionTile(
                           title: HardcodedLabels.filterEndTimeTitle.label,
                           value: state.endTime.as12Hr,
@@ -86,9 +79,7 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                                 .add(RoomFilterEvent.endTimePicked(value)),
                           ),
                         ),
-
                         const SizedBox(height: 120, child: Placeholder()),
-
                         _OptionTile(
                           title: HardcodedLabels.filterCapacityTitle.label,
                           value: '${state.capacity}',
@@ -101,16 +92,13 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                                 .add(RoomFilterEvent.capacityPicked(value)),
                           ),
                         ),
-
                         _CentreTile(
                           isOpened: _isCentresVisible,
                           onTap: () => setState(
                             () => _isCentresVisible = !_isCentresVisible,
                           ),
                         ),
-
                         const SizedBox(height: 32, child: Placeholder()),
-
                         _OptionTile(
                           title:
                               HardcodedLabels.filterVideoConferenceTitle.label,
@@ -130,7 +118,6 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                       ],
                     ),
                   ),
-
                   SizedBox(
                     width: double.infinity,
                     child: Padding(
@@ -143,7 +130,6 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 16),
                 ],
               ),
@@ -273,6 +259,16 @@ class _FilterRoomFormState extends State<FilterRoomForm> {
         ),
       ),
     ).then((_) => controller.dispose());
+  }
+
+  void _onReset(BuildContext context) {
+    final city = context.read<CityPoolBloc>().state.selectedCity;
+    final centres = context.read<CentrePoolBloc>().state.centresByCity;
+    final selectedCentres = centres[city?.code];
+
+    context.read<TempRoomFilterBloc>().add(
+      RoomFilterEvent.reset(selectedCentres: selectedCentres ?? []),
+    );
   }
 }
 
